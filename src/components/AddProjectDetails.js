@@ -17,7 +17,7 @@ import MomentUtils from '@date-io/moment'
 import moment from 'moment'
 import CurrencyTextField from '@unicef/material-ui-currency-textfield'
 
-import { EXPECTED_BUDGET_TIMEFRAME_OPTIONS } from '../constants'
+import { EXPECTED_BUDGET_TIMEFRAME_OPTIONS, MAX_INT } from '../constants'
 import {
     selectCurrencyInformation
 } from '../scripts/selectors'
@@ -137,7 +137,7 @@ const AddProjectDetails = (props) => {
                         variant='outlined'
                         currencySymbol={`${currencyInformation['symbol']}`}
                         minimumValue='0'
-                        maximumValue='2147483647'
+                        maximumValue={`${MAX_INT / 100}`}
                         outputFormat='string'
                         decimalCharacter={`${currencyInformation['decimal']}`}
                         digitGroupSeparator={`${currencyInformation['thousand']}`}
