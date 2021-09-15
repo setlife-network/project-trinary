@@ -1,8 +1,7 @@
 import React from 'react'
 import {
     Box,
-    Grid,
-    Typography
+    Grid
 } from '@material-ui/core'
 
 import ContributorAllocations from '../components/ContributorAllocations'

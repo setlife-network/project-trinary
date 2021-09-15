@@ -58,6 +58,9 @@ export const GET_CONTRIBUTOR_ALLOCATIONS = gql`
                         name
                     }
                 }
+                payment {
+                    amount
+                }
             }
         }
     }
