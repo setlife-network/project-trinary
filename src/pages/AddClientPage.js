@@ -1,10 +1,6 @@
 import React from 'react'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
 import ClientAddForm from '../components/ClientAddForm'

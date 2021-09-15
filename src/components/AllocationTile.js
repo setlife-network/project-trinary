@@ -70,6 +70,7 @@ const AllocationTile = (props) => {
                         noWrap
                         className='redirect'
                         onClick={redirectToProject}
+                        data-testid='project-name'
                     >
                         <strong>
                             {`${allocation.project.name}`}
@@ -81,6 +82,7 @@ const AllocationTile = (props) => {
                         noWrap
                         className='redirect'
                         onClick={redirectToClient}
+                        data-testid='client-name'
                     >
                         <span>
                             {`${allocation.project.client.name}`}

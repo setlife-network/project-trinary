@@ -29,7 +29,7 @@ class LoginPage extends React.Component {
                             href='#contained-buttons'
                             style={{ backgroundColor: setlifeBlue }}
                         >
-                            <h3>{`Log in with your Github Account`}</h3>
+                            <h3 data-testid='button-h3'>{`Log in with your Github Account`}</h3>
                             <GitHubIcon className='githubIcon' />
                         </Button>
                     )}
