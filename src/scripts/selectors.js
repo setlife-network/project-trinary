@@ -53,12 +53,12 @@ export const getExpectedHours = (props) => {
     )
 }
 export const getAllocatedContributors = ({ allocations }) => {
-    const contributorsAllocated = []
-    allocations.map(a => {
-        if (!contributorsAllocated.includes(a.contributor)) {
-            contributorsAllocated.push(a.contributor)
+    const contributorsAllocated = allocations.reduce((result, a) => {
+        if (!result.includes(a.contributor)) {
+            result.push(a.contributor)
         }
-    })
+        return result
+    }, [])
     return contributorsAllocated
 }
 export const getActiveAndUpcomingAllocations = ({ activeOnly, allocations, upcomingOnly }) => {

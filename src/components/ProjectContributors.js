@@ -4,18 +4,17 @@ import {
     Box,
     Grid,
     Typography,
-    Link
+    TextField
 } from '@material-ui/core/'
 import {
-    differenceBy,
-    filter
+    differenceBy
 } from 'lodash'
 
 import AllocationAddForm from './AllocationAddForm'
+import ContributorList from './ContributorList'
 import LoadingProgress from './LoadingProgress'
 import ContributorTile from './ContributorTile'
 import ContributorsEmptyState from './ContributorsEmptyState'
-import GithubAccessBlocked from './GithubAccessBlocked'
 import { GET_PROJECT_CONTRIBUTORS } from '../operations/queries/ProjectQueries'
 import { GET_CONTRIBUTORS } from '../operations/queries/ContributorQueries'
 import { SYNC_PROJECT_GITHUB_CONTRIBUTORS } from '../operations/mutations/ProjectMutations'
@@ -31,11 +30,6 @@ const ProjectContributors = (props) => {
 
     const [contributors, setContributors] = useState([])
     const [githubContributors, setGithubContributors] = useState([])
-    const [openAddAllocationDialog, setOpenAddAllocationDialog] = useState(false)
-    const [contributorClicked, setContributorClicked] = useState(null)
-    const handleAddAllocationClose = (value) => {
-        setOpenAddAllocationDialog(false)
-    }
 
     const {
         data: dataProjectContributors,
@@ -75,7 +69,7 @@ const ProjectContributors = (props) => {
             variables: { project_id: Number(projectId) }
         })
     }, [])
-
+ 
     useEffect(() => {
         try {
             if (githubContributors.length) {
@@ -86,39 +80,36 @@ const ProjectContributors = (props) => {
         }
     }, [githubContributors])
 
-    const addAllocation = (props) => {
-        setOpenAddAllocationDialog(true)
-        setContributorClicked(props.contributor)
-    }
-
     if (loadingProjectContributors || loadingContributors || loadingGithubContributors) {
         return <LoadingProgress/>
     }
-    const isNotAContributor = () => {
-        return (
-            <GithubAccessBlocked
-                message={`You must have access to this repository on GitHub to see an up-to-date list of collaborators.`}
-                projectId={projectId}
-            />
-        )
-    }
+
     if (errorProjectContributors || errorContributors) return `Error!`
 
     const project = dataProjectContributors.getProjectById
+
     pageName(project.name)
+
     const { allocations } = project
 
+    if (differenceBy(dataContributors.getContributors, contributors, 'id').length != 0) {
+        setContributors(contributors.concat(...dataContributors.getContributors))
+    }
+    
     const activeAllocations = getActiveAndUpcomingAllocations({
         allocations: allocations,
         activeOnly: true
     })
+    
     const activeContributorsAllocated = getAllocatedContributors({
         allocations: activeAllocations
     })
+
     const upcomingAllocations = getActiveAndUpcomingAllocations({
         allocations: allocations,
         upcomingOnly: true
     })
+
     const upcomingContributorsAllocatedOnly = differenceBy(
         getAllocatedContributors({ allocations: upcomingAllocations }),
         activeContributorsAllocated,
@@ -129,122 +120,15 @@ const ProjectContributors = (props) => {
         setContributors(contributors.concat(...dataContributors.getContributors))
     }
 
-    const contributorsToAdd = differenceBy(contributors, [...activeContributorsAllocated, ...upcomingContributorsAllocatedOnly], 'id')
-
-    const renderContributors = (props) => {
-        const {
-            active,
-            contributors,
-            project
-        } = props
-        return contributors.map(c => {
-            return (
-                <Grid item xs={12} md={6}>
-                    <ContributorTile
-                        active={active}
-                        contributor={c}
-                        onAddButton={addAllocation}
-                        project={project}
-                    />
-                </Grid>
-            )
-        })
-    }
-
     return (
-        <Grid container className='ProjectContributors'>
-            <h1>
-                {`${project.name} Contributors`}
-            </h1>
-            <Grid xs={12}/>
-            <Grid item xs={12} sm={5}>
-                <Box
-                    bgcolor='primary.black'
-                    color='primary.light'
-                    borderRadius='borderRadius'
-                    px={5}
-                    py={1}
-                >
-                    {
-                        `${activeContributorsAllocated.length} active ${activeContributorsAllocated.length == 1
-                            ? 'contributor'
-                            : 'contributors'
-                        }`
-                    }
-                </Box>
-            </Grid>
-            <Grid item xs={12}>
-                <Box my={[2, 5]}>
-                    <Typography align='left' variant='h5'>
-                        {`Active contributors`}
-                    </Typography>
-                    <Grid container>
-                        {
-                            activeContributorsAllocated.length != 0
-                                ? renderContributors({
-                                    active: true,
-                                    contributors: activeContributorsAllocated,
-                                    project: project
-                                })
-                                : <ContributorsEmptyState active/>
-
-                        }
-                    </Grid>
-                </Box>
-                <Box my={[2, 5]}>
-                    <Typography align='left' variant='h5'>
-                        {`Upcoming contributors`}
-                    </Typography>
-                    <Grid container>
-                        {
-                            upcomingContributorsAllocatedOnly.length != 0
-                                ? renderContributors({
-                                    active: true,
-                                    contributors: upcomingContributorsAllocatedOnly,
-                                    project: project
-                                })
-                                : <ContributorsEmptyState active/>
-
-                        }
-                    </Grid>
-                </Box>
-                <hr/>
-            </Grid>
-            <h1>
-                {`Add new contributors to the project`}
-            </h1>
-            {errorGithubContributors
-                ? isNotAContributor()
-                : null
-            }
-            <Grid item xs={12}>
-                <Box>
-                    <Grid container>
-                        {
-                            contributorsToAdd.length != 0
-                                ? renderContributors({
-                                    active: false,
-                                    contributors: contributorsToAdd,
-                                    project: project
-                                })
-                                : <ContributorsEmptyState/>
-                        }
-                    </Grid>
-                </Box>
-                <Box my={[2, 5]} py={5}/>
-            </Grid>
-            <Grid item xs={12}>
-                {
-                    contributorClicked &&
-                    <AllocationAddForm
-                        project={project}
-                        open={openAddAllocationDialog}
-                        onClose={handleAddAllocationClose}
-                        contributor={contributorClicked}
-                    />
-                }
-            </Grid>
-        </Grid>
+        <ContributorList 
+            contributors={contributors}
+            project={project}
+            activeContributorsAllocated={activeContributorsAllocated}
+            upcomingContributorsAllocatedOnly={upcomingContributorsAllocatedOnly}
+            errorGithubContributors={errorGithubContributors}
+            projectId={projectId}
+        />
     )
 }
 
