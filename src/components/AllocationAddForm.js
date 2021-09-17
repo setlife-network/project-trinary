@@ -200,12 +200,12 @@ const AllocationAddForm = (props) => {
     const [allocationTypes, setAllocationTypes] = useState([1, 0])
     const [contributorAllocations, setContributorAllocations] = useState(null)
     const [contributorRates, setContributorRates] = useState(null)
-    const [endDate, setEndDate] = useState(moment().add(1, 'months').endOf('month')['_d'])
+    const [endDate, setEndDate] = useState(moment().add(1, 'months').endOf('month'))
     const [mostRecentAllocation, setMostRecentAllocation] = useState(null)
     const [newAllocationRate, setNewAllocationRate] = useState({})
     const [newAllocation, setNewAllocation] = useState({})
     const [rateCurrency, setRateCurrency] = useState(null)
-    const [startDate, setStartDate] = useState(moment().add(1, 'months').startOf('month')['_d'])
+    const [startDate, setStartDate] = useState(moment().add(1, 'months').startOf('month').utc())
     const [selectedContributor, setSelectedContributor] = useState(null)
     const [selectedProject, setSelectedProject] = useState(null)
     const [selectedPayment, setSelectedPayment] = useState(null)
@@ -340,9 +340,9 @@ const AllocationAddForm = (props) => {
             ? dataProjectContributors.allocations
             : null
     const payments = dataClientPayments
-        ? [...dataClientPayments.getProjectById.client.payments, { 
+        ? [...dataClientPayments.getProjectById.client.payments, {
             amount: null,
-            date_paid: null 
+            date_paid: null
         }].sort((a, b) => b.date_incurred - a.date_incurred)
         : [null]
     const clientCurrency = (

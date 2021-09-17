@@ -23,7 +23,7 @@ const RangeDatePickerInput = ({
                         <Grid item xs={12} sm={8} className='date-holder'>
                             {`${
                                 startDate
-                                    ? moment(startDate).format('MM/DD/YYYY')
+                                    ? startDate
                                     : 'Start date'
                             }`}
                         </Grid>
@@ -42,8 +42,8 @@ const RangeDatePickerInput = ({
                         <Grid item xs={12} sm={8} className='date-holder'>
                             {`${
                                 endDate
-                                    ? moment(endDate).format('MM/DD/YYYY')
-                                    : ' End date'
+                                    ? endDate
+                                    : 'End date'
                             }`}
                         </Grid>
                     </Grid>

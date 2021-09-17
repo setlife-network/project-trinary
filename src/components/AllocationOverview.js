@@ -132,9 +132,9 @@ const AllocationOverview = (props) => {
                     id: contributorAllocation.contributor.id
                 }
             })
-            setUpdatedAllocationEndDate(moment.utc(allocation.end_date, 'x').toDate())
+            setUpdatedAllocationEndDate(moment(allocation.end_date, 'x').utc())
             setUpdatedAllocationPayment(contributorAllocation.payment)
-            setUpdatedAllocationStartDate(moment.utc(allocation.start_date, 'x').toDate())
+            setUpdatedAllocationStartDate(moment(allocation.start_date, 'x').utc())
         }
     }, [contributorAllocation])
 
@@ -213,7 +213,7 @@ const AllocationOverview = (props) => {
     if (errorAllocation || errorClientPayments) return `Error`
 
     const { getAllocationById: allocation } = dataAllocation
-    
+
     const payments = dataClientPayments
         ? [
             ...dataClientPayments.getClientById.payments
@@ -266,8 +266,8 @@ const AllocationOverview = (props) => {
                     startDate={updatedAllocationStartDate}
                 />
                 <Box mt={1}>
-                    <Grid 
-                        container 
+                    <Grid
+                        container
                         justify='space-between'
                         style={{ textAlign: 'center' }}
                     >

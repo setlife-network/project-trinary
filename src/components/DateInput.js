@@ -21,15 +21,15 @@ const DateInput = (props) => {
         setStartDate,
         setEndDate,
     } = props
-    
+
     const [selectedWeek, setSelectedWeek] = useState()
     const [selectedMonth, setSelectedMonth] = useState()
     const [selectedYear, setSelectedYear] = useState()
 
     const getRangedTimeEntries = (dates) => {
         const [start, end] = dates
-        setStartDate(start)
-        setEndDate(end)
+        setStartDate(moment(start).utc())
+        setEndDate(moment(end).utc())
         setSelectedWeek(0)
         setSelectedMonth(0)
         setSelectedYear(0)
@@ -49,15 +49,15 @@ const DateInput = (props) => {
         }
         setEndDate(endingDate.toDate())
     }
-    
+
     const renderWeeks = () => {
         const weeks = [1, 2, 3, 4]
         return weeks.map(w => (
             <Grid item xs={2}>
-                <Button 
+                <Button
                     color='primary'
-                    variant={`${selectedWeek == w 
-                        ? 'contained' 
+                    variant={`${selectedWeek == w
+                        ? 'contained'
                         : 'outlined'
                     }`}
                     onClick={() => getWeekMonthYears(w)}
@@ -72,10 +72,10 @@ const DateInput = (props) => {
         const months = [2, 4, 6, 8, 10]
         return months.map(m => (
             <Grid item xs={2}>
-                <Button 
+                <Button
                     color='primary'
-                    variant={`${selectedMonth == m 
-                        ? 'contained' 
+                    variant={`${selectedMonth == m
+                        ? 'contained'
                         : 'outlined'
                     }`}
                     onClick={() => getWeekMonthYears(0, m, 0)}
@@ -90,17 +90,17 @@ const DateInput = (props) => {
         const years = [1, 2, 3, 4, 5]
         return years.map(y => (
             <Grid item xs={2}>
-                <Button  
+                <Button
                     color='primary'
-                    variant={`${selectedYear == y 
-                        ? 'contained' 
+                    variant={`${selectedYear == y
+                        ? 'contained'
                         : 'outlined'
                     }`}
                     onClick={() => getWeekMonthYears(0, 0, y)}
                 >
                     {y}
                 </Button>
-            </Grid> 
+            </Grid>
         ))
     }
 
@@ -108,15 +108,15 @@ const DateInput = (props) => {
         <Grid container className='DateInput'>
             <Box
                 display={
-                    { 
-                        xs: 'none', 
-                        sm: 'block' 
+                    {
+                        xs: 'none',
+                        sm: 'block'
                     }
                 }
             >
                 <Accordion>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography 
+                        <Typography
                             variant='subtitle1'
                         >
                             {'Date Quick Select'}
@@ -125,8 +125,8 @@ const DateInput = (props) => {
                     <AccordionDetails>
                         <Grid item xs={12}>
                             <Box px={2} py={1}>
-                                <Grid 
-                                    container 
+                                <Grid
+                                    container
                                     spacing={2}
                                 >
                                     <Grid item xs={2}>
@@ -156,9 +156,9 @@ const DateInput = (props) => {
             </Box>
             <Grid item xs={12} className='RangeDatePicker'>
                 <DatePicker
-                    selected={startDate}
-                    startDate={startDate}
-                    endDate={endDate}
+                    selected={Date.parse(startDate.format('MM/DD/YYYY'))}
+                    startDate={Date.parse(startDate.format('MM/DD/YYYY'))}
+                    endDate={Date.parse(endDate)}
                     shouldCloseOnSelect={startDate && !endDate}
                     selectsRange
                     onChange={(dates) => getRangedTimeEntries(dates)}
@@ -172,11 +172,11 @@ const DateInput = (props) => {
                         >
                             <RangeDatePickerInput
                                 startDate={startDate
-                                    ? startDate
+                                    ? startDate.format('MM/DD/YYYY')
                                     : 'Start date'
                                 }
                                 endDate={endDate
-                                    ? endDate
+                                    ? endDate.format('MM/DD/YYYY')
                                     : 'End date'
                                 }
                             />

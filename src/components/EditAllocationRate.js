@@ -34,7 +34,7 @@ const EditAllocationRate = (props) => {
         setStartDate,
         startDate,
     } = props
-
+    
     const [selectedRateType, setSelectedRateType] = useState(rate.type)
 
     return (
