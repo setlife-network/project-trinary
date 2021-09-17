@@ -1,0 +1,28 @@
+FROM node:14
+
+# set environment variables
+ENV APP=/usr/src/app
+
+# where the code lives
+WORKDIR $APP
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
+
+COPY .env .
+
+RUN npm install
+
+# copy project
+COPY . .
+
+# To deploy the UI, a react-scripts build needs to run with frontend environment
+# variables in place at build time so we make sure our workflow files take care of
+# populating this file with the correct values
+
+
+EXPOSE 6002
+STOPSIGNAL SIGTERM
+CMD ["npm", "ui"]

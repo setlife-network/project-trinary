@@ -1,0 +1,21 @@
+FROM node:14
+
+# set environment variables
+ENV APP=/usr/src/app
+
+# where the code lives
+WORKDIR $APP
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
+
+RUN npm install
+
+# copy project files
+COPY . .
+
+EXPOSE 8080
+STOPSIGNAL SIGTERM
+CMD [ "npm", "build" ]

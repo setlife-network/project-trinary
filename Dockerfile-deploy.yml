@@ -1,0 +1,17 @@
+services:
+  backend:
+    env_file:
+        './.env'
+    build:
+      context: .
+      dockerfile: ./Dockerfile-api
+    image: ''
+    ports:
+      - '8080'
+  frontend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile-ui
+    image: ''
+    ports:
+      - '6002'
