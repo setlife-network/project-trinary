@@ -340,9 +340,9 @@ const AllocationAddForm = (props) => {
             ? dataProjectContributors.allocations
             : null
     const payments = dataClientPayments
-        ? [...dataClientPayments.getProjectById.client.payments, { 
+        ? [...dataClientPayments.getProjectById.client.payments, {
             amount: null,
-            date_paid: null 
+            date_paid: null
         }].sort((a, b) => b.date_incurred - a.date_incurred)
         : [null]
     const clientCurrency = (
@@ -496,7 +496,9 @@ const AllocationAddForm = (props) => {
                             variant={`contained`}
                             color='primary'
                             disabled={
-                                !newAllocationRate['total_amount'] || !newAllocationRate['hourly_rate']
+                                !selectedProject ||
+                                !newAllocationRate['total_amount'] ||
+                                !newAllocationRate['hourly_rate']
                                     ? true
                                     : false
                             }
