@@ -26,7 +26,7 @@ import {
 } from '../scripts/selectors'
 import { EXPECTED_BUDGET_TIMEFRAME_OPTIONS } from '../constants'
 import { GET_CLIENT_INFO } from '../operations/queries/ClientQueries'
-import { ADD_PROJECT } from '../operations/mutations/ProjectMutations'
+import { ADD_PROJECT, SYNC_TOGGL_PROJECT } from '../operations/mutations/ProjectMutations'
 import { CREATE_PERMISSION } from '../operations/mutations/PermissionMutations'
 
 const AddProjectForm = (props) => {
@@ -61,11 +61,19 @@ const AddProjectForm = (props) => {
         createPermission,
         {
             data: dataNewPermission,
-            loadin: loadingNewPermission,
+            loading: loadingNewPermission,
             error: errorNewPermission
         }] = useMutation(CREATE_PERMISSION, {
         errorPolicy: 'all'
     })
+
+    const [
+        syncTogglProject,
+        {
+            data: dataTogglSync,
+            loading: loadingTogglSync,
+            error: errorTogglSync,
+        }] = useMutation(SYNC_TOGGL_PROJECT)
 
     const [budgetTimeframe, setBudgetTimeframe] = useState(null)
     const [createProjectError, setCreateProjectError] = useState(null)
@@ -136,6 +144,15 @@ const AddProjectForm = (props) => {
                     project_id: newProject.data.createProject.id,
                     type: 'owner'
                 } })
+            if (projectToggl) {
+                await syncTogglProject({
+                    variables: {
+                        project_id: newProject.data.createProject.id,
+                        toggl_url: newProjectVariables.toggl_url
+                    }
+                })
+                if (loadingTogglSync) return <LoadingProgress/>
+            }
             history.push(`/projects/${newProject.data.createProject.id}`)
         }
     }

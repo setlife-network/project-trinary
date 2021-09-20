@@ -82,3 +82,14 @@ export const UPDATE_PROJECT = gql`
         }
     }
 `
+
+export const SYNC_TOGGL_PROJECT = gql`
+    mutation syncTogglProject(
+        $project_id: Int!,
+        $toggl_url: String
+    ){
+        syncTogglProject(project_id: $project_id, toggl_url: $toggl_url){
+            id
+        }
+    }
+`

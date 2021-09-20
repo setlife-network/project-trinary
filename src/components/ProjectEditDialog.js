@@ -31,7 +31,7 @@ import {
     verifyGithubURL,
     verifyTogglURL
 } from '../scripts/selectors'
-import { UPDATE_PROJECT } from '../operations/mutations/ProjectMutations'
+import { SYNC_TOGGL_PROJECT, UPDATE_PROJECT } from '../operations/mutations/ProjectMutations'
 import { EXPECTED_BUDGET_TIMEFRAME_OPTIONS } from '../constants'
 
 const ProjectEditDialog = (props) => {
@@ -47,6 +47,14 @@ const ProjectEditDialog = (props) => {
     const currencyInformation = selectCurrencyInformation({
         currency: project.client.currency
     })
+
+    const [
+        syncTogglProject,
+        {
+            data: dataTogglSync,
+            loading: loadingTogglSync,
+            error: errorTogglSync,
+        }] = useMutation(SYNC_TOGGL_PROJECT)
 
     const [updateProject, { data, loading, error }] = useMutation(UPDATE_PROJECT, { errorPolicy: 'all' })
 
@@ -113,8 +121,16 @@ const ProjectEditDialog = (props) => {
             setEditProjectError(`${Object.keys(projectEdited.errors[0].extensions.exception.fields)[0]}  already exists`)
             setDisplayError(true)
         } else {
+            await syncTogglProject({
+                variables: {
+                    project_id: project.id,
+                    toggl_url: togglURL
+                }
+            })
+            if (loadingTogglSync) return <LoadingProgress/>
             onClose()
         }
+
     }
 
     useEffect(() => {

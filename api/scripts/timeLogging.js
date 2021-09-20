@@ -3,11 +3,12 @@ const db = require('../models')
 module.exports = (() => {
 
     const matchTimeEntry = async (timeEntry) => {
-        return db.models.TimeEntry.findOne({
+        const match = await db.models.TimeEntry.findOne({
             where: {
                 toggl_id: timeEntry.id
             }
         })
+        return match
     }
 
     const matchContributor = (timeEntry) => {
@@ -19,21 +20,27 @@ module.exports = (() => {
     }
 
     const addTimeEntries = (params) => {
-        return Promise.all(params.timeEntries.map(async t => {
-            if (!(await matchTimeEntry(t))) {
-                const contributor = await matchContributor(t)
+        let contributor
+        return params.timeEntries.forEach(async timeEntry => {
+            if (!(await matchTimeEntry(timeEntry))) {
+                contributor = await matchContributor(timeEntry)
                 if (contributor) {
-                    await db.models.TimeEntry.create({
-                        seconds: t.dur / 1000,
-                        toggl_id: t.id,
-                        start_time: t.start,
-                        description: t.description || null,
-                        contributor_id: contributor.id,
-                        project_id: params.project_id,
-                    })
+                    try {
+                        await db.models.TimeEntry.create({
+                            seconds: timeEntry.dur / 1000,
+                            toggl_id: timeEntry.id,
+                            start_time: timeEntry.start,
+                            description: timeEntry.description || null,
+                            contributor_id: contributor.id,
+                            project_id: params.project_id,
+                        })
+                    } catch (err) {
+                        console.log('error while creating time entry ', err)
+                    }
+
                 }
             }
-        }))
+        })
     }
 
     return {

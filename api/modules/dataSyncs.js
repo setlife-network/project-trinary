@@ -188,7 +188,7 @@ const dataSyncs = module.exports = (() => {
         try {
             const timeEntries = await toggl.fetchWorkspaceTimeEntries({
                 pId: params.toggl_project_id,
-                wId: TOGGL.WORKSPACE_ID,
+                wId: params.workspaceId,
                 since: params.since,
                 until: params.until
             })

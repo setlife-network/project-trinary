@@ -132,7 +132,7 @@ module.exports = gql`
         ): [Issue]
         syncTogglProject(
             project_id: Int!
-            toggl_id: String
+            toggl_url: String
         ): Project
         updateProjectById(
             id: Int!
