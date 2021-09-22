@@ -129,7 +129,7 @@ app.post('/api/webhooks/invoice/updated', async (req, res) => {
                 stripeInvoice: invoiceObjectPayload
             })
             res.send('Payment created from invoice')
-        } catch {
+        } catch (err) {
             console.log(`An error ocurred: ${err}`)
             res.send(`An error ocurred: ${err}`);
         }

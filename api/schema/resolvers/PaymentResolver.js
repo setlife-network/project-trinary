@@ -3,7 +3,8 @@ const moment = require('moment')
 const { fn, col, Op } = require('sequelize')
 
 const { validateDatesFormat } = require('../helpers/inputValidation')
-const apiModules = require('../../modules');
+const apiModules = require('../../modules')
+const { DEFAULT_STRIPE_CURRENCY, STRIPE_SUPPORTED_CURRENCIES } = require('../../config/constants')
 
 module.exports = {
 
@@ -55,9 +56,9 @@ module.exports = {
                 }
             })
 
-            // Check if the client has an associated Stripe account
+            // Check if the client has an associated Stripe account and if the currency is supported
             // If it does, proceed to create the invoice on Stripe
-            if (client.external_uuid) {
+            if (client.external_uuid && STRIPE_SUPPORTED_CURRENCIES.includes(client.currency)) {
                 const stripeInvoice = await apiModules.paymentManagement.processStripeInvoiceWithPayment({
                     amount: createFields['amount'],
                     clientId: client.id,

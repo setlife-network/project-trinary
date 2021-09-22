@@ -1,8 +1,27 @@
 const moment = require('moment')
+const { DEFAULT_STRIPE_CURRENCY } = require('../config/constants')
 
 const budgeting = module.exports = (() => {
     const db = require('../models')
     const clientManagement = require('./clientManagement')
+
+    const checkForMismatchedClientPayments = async (params) => {
+        const existingPayments = await getPaymentsWithClientId({ client_id: params.client.id })
+        
+        if (existingPayments) {
+            existingPayments.forEach(async payment => {
+
+                if (params.client.currency !== params.stripeInvoiceCurrency) {
+                    try {
+                        const disconnectedCustomer = await clientManagement.deleteClientUuid({ id: params.client.external_uuid })
+                        console.log(`stripe customer disconnected ${disconnectedCustomer.email}`)
+                    } catch (err) {
+                        console.log(`An error ocurred: ${err}`)
+                    }
+                }
+            })
+        }
+    }
 
     const createPaymentFromStripeInvoice = async ({ stripeInvoice }) => {
         const client = await clientManagement.findClientWithExternalId({
@@ -43,6 +62,14 @@ const budgeting = module.exports = (() => {
         return deletedPayment
     }
 
+    const getPaymentsWithClientId = (params) => {
+        return db.models.Payment.findAll({
+            where: {
+                client_id: params.client_id
+            }
+        })
+    }
+
     const getPaymentWithExternalId = (params) => {
         return db.models.Payment.findOne({
             where: {
@@ -65,6 +92,18 @@ const budgeting = module.exports = (() => {
                 external_uuid_type: 'STRIPE'
             }
         })
+        const client = await clientManagement.findClientWithExternalId({
+            id: stripeInvoice.customer
+        })
+
+        try {
+            const paymentsDoNotMatch = await checkForMismatchedClientPayments({ client: client, stripeInvoiceCurrency: stripeInvoice.currency })
+            client.currency = stripeInvoice.currency.toUpperCase()
+            await client.save()
+        } catch (err) {
+            console.log(`error while changing client currency: ${err}`)
+        }
+
         if (paymentToUpdate) {
             const datePaidOverride = stripeInvoice.metadata.date_paid || null
             const dateIncurredOverride = stripeInvoice.metadata.date_incurred || null
