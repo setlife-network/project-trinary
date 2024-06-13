@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
     Collapse,
     Grid,
@@ -35,6 +36,8 @@ const EditAllocationInfo = (props) => {
     })
 
     const [openPayments, setOpenPayments] = useState(false)
+
+    const history = useHistory()
 
     const handleClickPayments = () => {
         setOpenPayments(!openPayments)
@@ -108,6 +111,10 @@ const EditAllocationInfo = (props) => {
         })
     }
 
+    const redirectToContributor = () => {
+        history.push('/contributor/' + allocation.contributor.id)
+    }
+
     return (
         <Grid
             container
@@ -125,8 +132,14 @@ const EditAllocationInfo = (props) => {
             <Grid item xs={6}>
                 <Typography>
                     {`Contributor`}
-                    <Typography color='primary'>
-                        {`${allocation.contributor.name}`}
+                    <Typography 
+                        className='redirect' 
+                        color='primary'
+                        onClick={redirectToContributor}
+                    >
+                        <span>
+                            {`${allocation.contributor.name}`}
+                        </span>
                     </Typography>
                 </Typography>
             </Grid>

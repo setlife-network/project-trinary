@@ -1,0 +1,14 @@
+.EditAllocationInfo {
+
+}
+
+@media screen and (min-width: $sm) {
+    .EditAllocationInfo {
+        .redirect {
+            cursor: pointer;
+            :hover {
+                color: $grey
+            }
+        }
+    }
+}
