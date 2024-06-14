@@ -1,3 +1,6 @@
+const moment = require('moment')
+const { Op } = require('sequelize')
+
 module.exports = {
 
     Issue: {
@@ -13,8 +16,22 @@ module.exports = {
             return models.Issue.findByPk(id)
 
         },
-        getIssuesByProjectId: async (root, { project_id }, { models }) => {
-            return models.Issue.findAll({ where: { project_id } })
+        getIssuesByProjectId: async (root, { project_id, limit, offset, last_30_days_only }, { models }) => {
+            const issuesConditions = {
+                project_id
+            }
+            if (last_30_days_only) {
+                issuesConditions.created_at = {
+                    [Op.gte]: `${moment().subtract(30, 'days').toDate()}`
+                }
+            }
+            return models.Issue.findAll({
+                where: issuesConditions,
+                limit: limit,
+                offset: offset,
+                order: [['date_opened', 'DESC']]
+
+            })
 
         }
     },

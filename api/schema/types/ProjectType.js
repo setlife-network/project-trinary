@@ -27,7 +27,10 @@ module.exports = gql`
         contributors: [Contributor]
         githubContributors: [Contributor]
         issuesOpened(fromDate: String, toDate: String): Int
-        issues: [Issue]
+        issues(
+            limit: Int,
+            offset: Int
+        ): [Issue]
         permissions: [Permission]
         githubIssuesOpened(
             fromDate: String,

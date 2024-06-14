@@ -133,8 +133,12 @@ export const GET_PROJECT_CONTRIBUTORS = gql`
         }
     }
 `
-export const GET_PROJECT_ISSUES = gql`
-    query ProjectTimeEntries($id: Int!, $issuesFromDate: String, $issuesToDate: String){
+export const GET_PROJECT_METRICS = gql`
+    query ProjectTimeEntries(
+        $id: Int!,
+        $issuesFromDate: String,
+        $issuesToDate: String
+    ){
         getProjectById(id: $id){
             id
             name

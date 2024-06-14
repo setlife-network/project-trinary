@@ -14,7 +14,7 @@ const IssueTile = (props) => {
     const { issue } = props
     const issueIsOpen = issue.date_closed ? false : true
 
-    const renderContributions = (contributions) => {
+    const renderContributions = (contributions = []) => {
         return contributions.map(i => {
             return (
                 <Tooltip title={i.contributor.github_handle}>

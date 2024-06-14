@@ -5,7 +5,7 @@ import {
     Typography,
     Link
 } from '@material-ui/core'
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_PROJECT } from '../operations/queries/ProjectQueries';
 
 const GithubAccessBlocked = (props) => {
@@ -13,7 +13,7 @@ const GithubAccessBlocked = (props) => {
     const githubURL = props.githubURL
     
     const [projectGithubUrl, setProjectGithubUrl] = useState(null)
-    
+
     const [getProject, {
         data: dataProject,
         loading: loadingProject,
