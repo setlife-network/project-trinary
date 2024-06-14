@@ -61,6 +61,7 @@ const AllocationAddForm = (props) => {
     } = props
 
     const [allocationTypes, setAllocationTypes] = useState([1, 0])
+    const [allocationSelection, setAllocationSelection] = useState([1, 0])
     const [contributorAllocations, setContributorAllocations] = useState(null)
     const [contributorRates, setContributorRates] = useState(null)
     const [displayError, setDisplayError] = useState(false)
@@ -82,6 +83,14 @@ const AllocationAddForm = (props) => {
         fill(allocationTypesState, 0)
         allocationTypesState[selectedType] = 1
         setAllocationTypes([...allocationTypesState])
+    }
+
+    const addAllocationOrLinkPayment = (props) => {
+        const { allocationSelection, selection } = props
+        const selectionState = allocationSelection
+        fill(selectionState, 0)
+        selectionState[selection] = 1
+        setAllocationSelection([...selectionState])
     }
 
     const handleAlertClose = (event, reason) => {
@@ -428,7 +437,37 @@ const AllocationAddForm = (props) => {
         >
             <Box m={5}>
                 <DialogTitle>
-                    {`Add Allocation`}
+                    {project && 
+                        `Add Allocation`
+                    }
+                    {client && !selectedProject &&
+                        <ButtonGroup color='primary' aria-label='outlined primary button group'>
+                            <Button
+                                variant={`${allocationSelection[0] ? 'contained' : 'outlined'}`}
+                                color='primary'
+                                onClick={() => (
+                                    addAllocationOrLinkPayment({
+                                        selection: 0,
+                                        allocationSelection
+                                    })
+                                )}
+                            >
+                                {'Create New Allocation'}
+                            </Button>
+                            <Button
+                                variant={`${allocationSelection[1] ? 'contained' : 'outlined'}`}
+                                color='primary'
+                                onClick={() => (
+                                    addAllocationOrLinkPayment({
+                                        selection: 1,
+                                        allocationSelection
+                                    })
+                                )}
+                            >
+                                {'Link Existing Payment'}
+                            </Button>
+                        </ButtonGroup>
+                    }
                 </DialogTitle>
                 <Grid container spacing={5} justifyContent='center'>
                     <Grid item xs={12}>
@@ -458,6 +497,7 @@ const AllocationAddForm = (props) => {
                                         setNewAllocation={setNewAllocation}
                                         setContributor={setSelectedContributor}
                                         setProject={setSelectedProject}
+                                        allocationSelection={allocationSelection}
                                     />
                                 ) : (
                                     <AllocationProposeSpecifics

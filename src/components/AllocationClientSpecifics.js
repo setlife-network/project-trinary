@@ -44,7 +44,8 @@ const AllocationClientSpecifics = (props) => {
         project,
         setContributor,
         setProject,
-        setNewAllocation
+        setNewAllocation,
+        allocationSelection
     } = props
 
     const {
@@ -174,99 +175,109 @@ const AllocationClientSpecifics = (props) => {
 
     return (
         <Box className='AllocationClientSpecifics'>
-            <Grid container justifyContent='center'>
-                <Grid item xs={12}>
-                    <List component='nav'>
-                        <ListItem>
-                            <Grid container>
-                                <Grid item xs={2} md={3}>
-                                    <PaymentIcon color='primary'/>
-                                </Grid>
-                                <Grid item xs={10} md={3}>
-                                    <Typography>
-                                        {`${paymentAmount}`}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6} align='center'>
-                                    <Typography variant='caption' color='secondary'>
-                                        {`${payment.date_paid
-                                            ? moment.utc(payment.date_paid, 'x').format('MM/DD/YYYY')
-                                            : ''
-                                        }`}
-                                        {`${
-                                            !payment.date_paid && payment.date_incurred
-                                                ? 'Warning: This payment has not been paid'
-                                                : ''
+            {allocationSelection[0] 
+                ? ( 
+                    <Grid container justifyContent='center'>
+                        <Grid item xs={12}>
+                            <List component='nav'>
+                                <ListItem>
+                                    <Grid container>
+                                        <Grid item xs={2} md={3}>
+                                            <PaymentIcon color='primary'/>
+                                        </Grid>
+                                        <Grid item xs={10} md={3}>
+                                            <Typography>
+                                                {`${paymentAmount}`}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} md={6} align='center'>
+                                            <Typography variant='caption' color='secondary'>
+                                                {`${payment.date_paid
+                                                    ? moment.utc(payment.date_paid, 'x').format('MM/DD/YYYY')
+                                                    : ''
+                                                }`}
+                                                {`${
+                                                    !payment.date_paid && payment.date_incurred
+                                                        ? 'Warning: This payment has not been paid'
+                                                        : ''
 
-                                        }`}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                    </List>
-                </Grid>
+                                                }`}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </ListItem>
+                            </List>
+                        </Grid>
 
-                <Grid item xs={12}>
-                    <List component='nav'>
-                        <ListItem button onClick={handleClickProjectsList}>
-                            <Grid container>
-                                <Grid item xs={2} md={3}>
-                                    <AssessmentIcon color='primary'/>
-                                </Grid>
-                                <Grid item xs={4} md={3}>
-                                    <Typography>
-                                        {selectedProject ? selectedProject.name : 'No selected'}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={4} md={3} className='responsive-align'>
-                                    <Typography variant='caption' color='secondary'>
-                                        {`${githubProjectHandle}`}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={2} md={3} align='right'>
-                                    {openProjectsList
-                                        ? <ExpandLess />
-                                        : <ExpandMore />
-                                    }
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                        <Collapse in={openProjectsList} timeout='auto' unmountOnExit>
-                            {listProjects({
-                                projects,
-                                selectedProject: selectedProject
-                            })}
-                        </Collapse>
-                        <ListItem button onClick={handleClickContributorsList}>
-                            <Grid container>
-                                <Grid item xs={2} md={3}>
-                                    <PeopleIcon color='primary'/>
-                                </Grid>
-                                <Grid item xs={4} md={3}>
-                                    <Typography>
-                                        {selectedContributor ? selectedContributor.name : 'No selected'}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={4} md={3} className='responsive-align'>
-                                    <Typography variant='caption' color='secondary'>
-                                        {`${githubContributorHandle}`}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={2} md={3} align='right'>
-                                    {openContributorsList
-                                        ? <ExpandLess />
-                                        : <ExpandMore />
-                                    }
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                        <Collapse in={openContributorsList} timeout='auto' unmountOnExit>
-                            {listContributors(contributors)}
-                        </Collapse>
-                    </List>
-                </Grid>
+                        <Grid item xs={12}>
+                            <List component='nav'>
+                                <ListItem button onClick={handleClickProjectsList}>
+                                    <Grid container>
+                                        <Grid item xs={2} md={3}>
+                                            <AssessmentIcon color='primary'/>
+                                        </Grid>
+                                        <Grid item xs={4} md={3}>
+                                            <Typography>
+                                                {selectedProject ? selectedProject.name : 'No selected'}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} md={3} className='responsive-align'>
+                                            <Typography variant='caption' color='secondary'>
+                                                {`${githubProjectHandle}`}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={2} md={3} align='right'>
+                                            {openProjectsList
+                                                ? <ExpandLess />
+                                                : <ExpandMore />
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                </ListItem>
+                                <Collapse in={openProjectsList} timeout='auto' unmountOnExit>
+                                    {listProjects({
+                                        projects,
+                                        selectedProject: selectedProject
+                                    })}
+                                </Collapse>
+                                <ListItem button onClick={handleClickContributorsList}>
+                                    <Grid container>
+                                        <Grid item xs={2} md={3}>
+                                            <PeopleIcon color='primary'/>
+                                        </Grid>
+                                        <Grid item xs={4} md={3}>
+                                            <Typography>
+                                                {selectedContributor ? selectedContributor.name : 'No selected'}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} md={3} className='responsive-align'>
+                                            <Typography variant='caption' color='secondary'>
+                                                {`${githubContributorHandle}`}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={2} md={3} align='right'>
+                                            {openContributorsList
+                                                ? <ExpandLess />
+                                                : <ExpandMore />
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                </ListItem>
+                                <Collapse in={openContributorsList} timeout='auto' unmountOnExit>
+                                    {listContributors(contributors)}
+                                </Collapse>
+                            </List>
+                        </Grid>
 
-            </Grid>
+                    </Grid>
+                ) : (
+                    <Grid container justifyContent='center'>
+                        <Grid item xs={12}>
+                            'test'
+                        </Grid>
+                    </Grid>
+                )
+            }
         </Box>
     )
 
